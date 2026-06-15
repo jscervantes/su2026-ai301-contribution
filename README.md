@@ -3,7 +3,7 @@
 **Contribution Number:** 1 
 **Student:** Jose Cervantes 
 **Issue:** https://github.com/wso2/product-is/issues/27930
-**Status:** [Phase I] [Complete]
+**Status:** Phase II [In Progress]
 
 ---
 
@@ -17,19 +17,25 @@ This issue seems like an easy win. Refactoring what seems to be a single occuran
 
 ### Problem Description
 
-[In your own words, what's broken or missing?]
+A React accessibility warning from react-doctor reports a non-interactive element in the code has a tabIndex set (1 violation). It recommends removing tabIndex from non-interactive elements or giving them an interactive role so keyboard users get expected behavior.
 
 ### Expected Behavior
 
-[What should happen?]
+Non-interactive elements should not be focusable. Only elements that provide an interactive behavior (links, buttons, controls) should receive keyboard focus (via native semantics or tabIndex when appropriate).
+Breadcrumb / organization-switch items should be implemented with proper semantics (e.g., <a> or <button>) so keyboard users can both focus and activate them with expected keyboard interactions.
+Accessibility linters (react-doctor) should not report react-doctor/no-noninteractive-tabindex for this component.
 
 ### Current Behavior
 
-[What actually happens?]
+A non-interactive element in admin.organizations.v1/components/organization-switch/organization-switch-breadcrumb.tsx (reported at line ~491) has a tabIndex (e.g., tabIndex={0}) applied, making it focusable but without corresponding interactive behavior or keyboard handlers. When keyboard users focus that element, nothing happens or behavior is unexpected — this triggers the react-doctor/no-noninteractive-tabindex warning.
+This creates an accessibility regression: focusable elements that are not interactive confuse keyboard and assistive technology users.
 
 ### Affected Components
 
-[Which parts of the codebase are involved?]
+admin.organizations.v1/components/organization-switch/organization-switch-breadcrumb.tsx (primary)
+organization-switch UI (breadcrumb rendering and any parent component that composes the breadcrumb)
+Any styles or click/keyboard handlers tied to breadcrumb items (if they assume non-focusable semantics)
+Accessibility linting/config for the frontend (react-doctor rule enforcement)
 
 ---
 
@@ -37,7 +43,7 @@ This issue seems like an easy win. Refactoring what seems to be a single occuran
 
 ### Environment Setup
 
-[Notes on setting up your local development environment - challenges you faced, how you solved them]
+Setting up the WSO2 development environment involved installing OpenJDK 23, Apache Maven, and the most recent release of WSO2. Pretty straightforward.
 
 ### Steps to Reproduce
 
