@@ -47,15 +47,27 @@ Setting up the WSO2 development environment involved installing OpenJDK 23, Apac
 
 ### Steps to Reproduce
 
-1. [Step 1]
-2. [Step 2]
-3. [Observed result]
+1. I was able to confirm `tabIndex={ 0 }` on line 491 of `features/admin.organizations.v1/components/organization-switch/organizat
+  ion-switch-breadcrumb.ts`
+2. I ran:
+
+```
+~/P/c/a/identity-apps master ❱ node /tmp/rd-repro/node_modules/eslint/bin/eslint.js --config  /tmp/rd-repro/eslint.config.js --no-config-lookup features/admin.organizations.v1/components/organization-switch/organization-switch-breadcrumb.tsx
+```
+And got:
+```
+/****/features/admin.organizations.v1/components/organization-switch/organization-switch-breadcrumb.tsx
+  491:33  warning  `tabIndex` should only be declared on interactive elements  jsx-a11y/no-noninteractive-tabindex
+
+✖ 1 problem (0 errors, 1 warning)
+```
+#### What I'm doing here:
+
+Setting up a throwaway ESLint that runs only on React Doctor's flagged specfied rule, then pointing it at the file in the issue. We are essentially reproducing what React Doctor saw.
 
 ### Reproduction Evidence
 
-- **Commit showing reproduction:** [Link to commit in your fork]
-- **Screenshots/logs:** [If applicable]
-- **My findings:** [What you discovered during reproduction]
+- **My findings:** `tabIndex={0}` is inside of a non-interactive `<div>` on line 491.
 
 ---
 
